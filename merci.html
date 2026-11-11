@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Merci — DÉDALE</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    body { margin:0; background:#163D32; color:#F3F0E6; font-family:'Inter',sans-serif; display:flex; align-items:center; justify-content:center; min-height:100vh; }
+    .conteneur { text-align:center; max-width:600px; padding:40px 20px; }
+    h1 { font-family:'Cormorant Garamond',serif; font-size:2.4rem; margin:0 0 20px; }
+    p { line-height:1.7; font-size:1rem; opacity:0.9; }
+    .bouton { display:inline-block; background:#B8A477; color:#163D32; text-decoration:none; padding:18px 40px; border-radius:4px; font-weight:600; font-size:1.1rem; margin-top:30px; }
+    .message-erreur { color:#B8A477; font-size:0.9rem; margin-top:25px; display:none; }
+  </style>
+</head>
+<body>
+  <div class="conteneur">
+    <h1>Le premier pas vers la lucidité.</h1>
+    <p>Merci pour votre confiance. Le labyrinthe des idées vous attend. À vous d'en trouver le chemin.</p>
+    <p>Votre Manuel de la Lucidité est maintenant disponible.</p>
+    <a id="bouton-telechargement" href="#" class="bouton">TÉLÉCHARGER MON MANUEL</a>
+    <p id="message-erreur" class="message-erreur">Si vous venez de payer et que le bouton ne fonctionne pas, vérifiez votre email de confirmation ou contactez-nous.</p>
+  </div>
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const sessionId = params.get('session_id');
+    const bouton = document.getElementById('bouton-telechargement');
+    const messageErreur = document.getElementById('message-erreur');
+    if (sessionId) {
+      bouton.href = `/api/download?session_id=${encodeURIComponent(sessionId)}`;
+    } else {
+      bouton.style.display = 'none';
+      messageErreur.style.display = 'block';
+    }
+  </script>
+</body>
+</html>
