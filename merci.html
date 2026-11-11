@@ -3,30 +3,333 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Confirmation de commande — DÉDALE">
+  <meta name="theme-color" content="#0d2c22">
   <title>Merci — DÉDALE</title>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
   <style>
-    body { margin:0; background:#163D32; color:#F3F0E6; font-family:'Inter',sans-serif; display:flex; align-items:center; justify-content:center; min-height:100vh; }
-    .conteneur { text-align:center; max-width:600px; padding:40px 20px; }
-    h1 { font-family:'Cormorant Garamond',serif; font-size:2.4rem; margin:0 0 20px; }
-    p { line-height:1.7; font-size:1rem; opacity:0.9; }
-    .bouton { display:inline-block; background:#B8A477; color:#163D32; text-decoration:none; padding:18px 40px; border-radius:4px; font-weight:600; font-size:1.1rem; margin-top:30px; }
-    .message-erreur { color:#B8A477; font-size:0.9rem; margin-top:25px; display:none; }
+    :root {
+      --forest: #12382c;
+      --forest-dark: #0d2c22;
+      --ivory: #f3efdf;
+      --gold: #d4b66f;
+      --gold-soft: #e2ce9c;
+      --muted: rgba(243,239,223,.76);
+      --line: rgba(212,182,111,.25);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      min-height: 100vh;
+      margin: 0;
+      display: grid;
+      place-items: center;
+      overflow-x: hidden;
+      padding: 32px 18px;
+      color: var(--ivory);
+      background: var(--forest-dark);
+      font-family: 'Inter', sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .atmosphere {
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      background:
+        radial-gradient(ellipse at 50% 42%, rgba(53,103,72,.34), transparent 48%),
+        radial-gradient(ellipse at 12% 88%, rgba(30,78,55,.18), transparent 40%),
+        linear-gradient(145deg, #143b2d 0%, #0d2b21 58%, #0a241c 100%);
+    }
+
+    .atmosphere::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      opacity: .12;
+      background: repeating-linear-gradient(
+        135deg,
+        transparent 0 78px,
+        rgba(230,213,167,.09) 79px,
+        transparent 80px 158px
+      );
+      mask-image: linear-gradient(to bottom, black, transparent 82%);
+      animation: motif 48s ease-in-out infinite alternate;
+    }
+
+    .conteneur {
+      position: relative;
+      width: min(100%, 620px);
+      padding: clamp(34px, 7vw, 62px) clamp(22px, 6vw, 54px);
+      text-align: center;
+      border: 1px solid rgba(212,182,111,.18);
+      background: linear-gradient(155deg, rgba(22,62,47,.42), rgba(8,34,26,.2));
+      box-shadow: 0 28px 90px rgba(0,0,0,.16);
+      isolation: isolate;
+      animation: panel-in 2s cubic-bezier(.2,.7,.2,1) both;
+    }
+
+    .conteneur::before,
+    .conteneur::after {
+      content: "";
+      position: absolute;
+      z-index: -1;
+      pointer-events: none;
+    }
+
+    .conteneur::before {
+      width: 230px;
+      height: 170px;
+      top: -70px;
+      left: calc(50% - 115px);
+      border-radius: 50%;
+      background: rgba(205,174,104,.15);
+      filter: blur(65px);
+      animation: halo 15s ease-in-out infinite alternate;
+    }
+
+    .conteneur::after {
+      inset: 9px;
+      border: 1px solid rgba(212,182,111,.07);
+    }
+
+    .marque {
+      display: inline-flex;
+      align-items: center;
+      gap: 13px;
+      margin-bottom: 28px;
+      color: var(--gold-soft);
+      font-size: .66rem;
+      font-weight: 500;
+      letter-spacing: .36em;
+      text-transform: uppercase;
+      opacity: 0;
+      animation: fade 1.6s .25s ease forwards;
+    }
+
+    .marque::before,
+    .marque::after {
+      content: "";
+      width: 25px;
+      height: 1px;
+      background: var(--gold);
+      transform: scaleX(0);
+      animation: draw 1.8s .6s cubic-bezier(.22,.61,.36,1) forwards;
+    }
+
+    h1 {
+      max-width: 500px;
+      margin: 0 auto 17px;
+      color: var(--ivory);
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2.65rem, 7vw, 4.15rem);
+      font-weight: 500;
+      letter-spacing: -.025em;
+      line-height: .98;
+      text-wrap: balance;
+      opacity: 0;
+      animation: title-in 2s .35s cubic-bezier(.2,.7,.2,1) forwards;
+    }
+
+    .ornement {
+      width: 38px;
+      height: 1px;
+      margin: 0 auto 22px;
+      background: var(--gold);
+      transform: scaleX(0);
+      animation: draw 2s 1s ease forwards;
+    }
+
+    p {
+      max-width: 440px;
+      margin: 0 auto 13px;
+      color: var(--muted);
+      font-size: .9rem;
+      line-height: 1.9;
+      font-weight: 400;
+      opacity: 0;
+      animation: rise 1.7s .9s ease forwards;
+    }
+
+    .disponible {
+      margin-top: 4px;
+      color: var(--gold-soft);
+      animation-delay: 1.15s;
+    }
+
+    .bouton {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+      min-height: 54px;
+      margin-top: 27px;
+      padding: 15px 25px;
+      overflow: hidden;
+      border: 1px solid var(--gold-soft);
+      border-radius: 1px;
+      color: #183328;
+      background: var(--gold-soft);
+      text-decoration: none;
+      font-size: .71rem;
+      font-weight: 600;
+      letter-spacing: .13em;
+      text-transform: uppercase;
+      opacity: 0;
+      animation: rise 1.8s 1.4s ease forwards, button-glow 9s 3.5s ease-in-out infinite;
+      transition: color .65s ease, background .65s ease, border-color .65s ease, transform .65s ease;
+    }
+
+    .bouton::before {
+      content: "";
+      position: absolute;
+      top: -50%;
+      left: -85%;
+      width: 42%;
+      height: 200%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,.42), transparent);
+      transform: skewX(-20deg);
+      transition: left 1.2s cubic-bezier(.22,.61,.36,1);
+    }
+
+    .bouton::after {
+      content: "↓";
+      font-size: 1.05rem;
+      font-weight: 400;
+      transition: transform .6s ease;
+    }
+
+    .bouton:hover {
+      color: var(--gold-soft);
+      background: transparent;
+      border-color: var(--gold);
+      transform: translateY(-2px);
+    }
+
+    .bouton:hover::before { left: 145%; }
+    .bouton:hover::after { transform: translateY(3px); }
+
+    .message-erreur {
+      display: none;
+      max-width: 430px;
+      margin: 24px auto 0;
+      padding-top: 17px;
+      border-top: 1px solid var(--line);
+      color: var(--gold-soft);
+      font-size: .82rem;
+      line-height: 1.75;
+      animation: fade 1s ease both;
+    }
+
+    .signature {
+      margin-top: 34px;
+      color: rgba(243,239,223,.4);
+      font-size: .59rem;
+      letter-spacing: .22em;
+      text-transform: uppercase;
+      opacity: 0;
+      animation: fade 1.6s 1.8s ease forwards;
+    }
+
+    @keyframes fade {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    @keyframes rise {
+      from { opacity: 0; transform: translateY(14px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes title-in {
+      from { opacity: 0; transform: translateY(22px); filter: blur(4px); }
+      to { opacity: 1; transform: translateY(0); filter: blur(0); }
+    }
+
+    @keyframes panel-in {
+      from { opacity: 0; transform: translateY(17px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes draw {
+      from { transform: scaleX(0); }
+      to { transform: scaleX(1); }
+    }
+
+    @keyframes halo {
+      from { transform: translate(-18px, 8px) scale(.85); opacity: .55; }
+      to { transform: translate(19px, -8px) scale(1.12); opacity: .9; }
+    }
+
+    @keyframes motif {
+      from { transform: translateY(0); }
+      to { transform: translateY(-25px); }
+    }
+
+    @keyframes button-glow {
+      0%, 100% { box-shadow: 0 0 0 rgba(226,206,156,0); }
+      50% { box-shadow: 0 0 23px rgba(226,206,156,.11); }
+    }
+
+    @media (max-width: 480px) {
+      .conteneur { padding: 38px 22px; }
+      p { font-size: .85rem; }
+      .bouton { width: 100%; padding-inline: 12px; font-size: .66rem; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: .01ms !important;
+        animation-delay: 0ms !important;
+        transition-duration: .01ms !important;
+      }
+      .marque, h1, p, .bouton, .signature { opacity: 1; transform: none; filter: none; }
+      .marque::before, .marque::after, .ornement { transform: scaleX(1); }
+    }
   </style>
 </head>
 <body>
-  <div class="conteneur">
+  <div class="atmosphere" aria-hidden="true"></div>
+
+  <main class="conteneur">
+    <div class="marque">DÉDALE</div>
+
     <h1>Le premier pas vers la lucidité.</h1>
-    <p>Merci pour votre confiance. Le labyrinthe des idées vous attend. À vous d'en trouver le chemin.</p>
-    <p>Votre Manuel de la Lucidité est maintenant disponible.</p>
-    <a id="bouton-telechargement" href="#" class="bouton">TÉLÉCHARGER MON MANUEL</a>
-    <p id="message-erreur" class="message-erreur">Si vous venez de payer et que le bouton ne fonctionne pas, vérifiez votre email de confirmation ou contactez-nous.</p>
-  </div>
+    <div class="ornement" aria-hidden="true"></div>
+
+    <p>
+      Merci pour votre confiance. Le labyrinthe des idées vous attend.
+      À vous d'en trouver le chemin.
+    </p>
+
+    <p class="disponible">
+      Votre Manuel de la Lucidité est maintenant disponible.
+    </p>
+
+    <a id="bouton-telechargement" href="#" class="bouton">
+      Télécharger mon manuel
+    </a>
+
+    <p id="message-erreur" class="message-erreur">
+      Si vous venez de payer et que le bouton ne fonctionne pas,
+      vérifiez votre email de confirmation ou contactez-nous.
+    </p>
+
+    <div class="signature">Collection Exploration intellectuelle</div>
+  </main>
+
   <script>
+    // La session Stripe est conservée et transmise à l'endpoint sécurisé.
     const params = new URLSearchParams(window.location.search);
     const sessionId = params.get('session_id');
     const bouton = document.getElementById('bouton-telechargement');
     const messageErreur = document.getElementById('message-erreur');
+
     if (sessionId) {
       bouton.href = `/api/download?session_id=${encodeURIComponent(sessionId)}`;
     } else {
