@@ -3,31 +3,471 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Le Manuel de la Lucidité — apprendre à penser par soi-même.">
+  <meta name="theme-color" content="#12382c">
   <title>Le Manuel de la Lucidité — DÉDALE</title>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
   <style>
-    body { margin:0; background:#163D32; color:#F3F0E6; font-family:'Inter',sans-serif; display:flex; align-items:center; justify-content:center; min-height:100vh; }
-    .conteneur { text-align:center; max-width:600px; padding:40px 20px; }
-    h1 { font-family:'Cormorant Garamond',serif; font-size:2.8rem; margin:0 0 10px; }
-    .sous-titre { color:#B8A477; font-size:1rem; letter-spacing:2px; text-transform:uppercase; margin-bottom:40px; }
-    .couverture { max-width:280px; width:100%; border-radius:8px; box-shadow:0 20px 50px rgba(0,0,0,0.4); margin-bottom:40px; cursor:pointer; }
-    p { line-height:1.7; font-size:1rem; opacity:0.9; }
-    .bouton { display:inline-block; background:#B8A477; color:#163D32; text-decoration:none; padding:18px 40px; border-radius:4px; font-weight:600; font-size:1.1rem; margin-top:20px; transition:opacity 0.2s; }
-    .bouton:hover { opacity:0.85; }
-    .prix { color:#B8A477; font-size:1.3rem; margin-top:25px; }
-    @media (max-width:600px) { h1 { font-size:2.2rem; } .conteneur { padding:30px 20px; } }
+    :root {
+      --forest: #12382c;
+      --forest-dark: #0d2c22;
+      --ivory: #f3efdf;
+      --gold: #d4b66f;
+      --gold-soft: #e2ce9c;
+      --mist: rgba(243,239,223,.76);
+      --hairline: rgba(212,182,111,.25);
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      overflow-x: hidden;
+      color: var(--ivory);
+      background: var(--forest-dark);
+      font-family: 'Inter', sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .atmosphere {
+      position: fixed;
+      inset: 0;
+      z-index: -2;
+      background:
+        radial-gradient(ellipse at 50% 42%, rgba(53,103,72,.34), transparent 47%),
+        radial-gradient(ellipse at 10% 85%, rgba(30,78,55,.18), transparent 40%),
+        linear-gradient(145deg, #143b2d 0%, #0d2b21 58%, #0a241c 100%);
+    }
+
+    .atmosphere::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      opacity: .13;
+      background-image: repeating-linear-gradient(135deg, transparent 0 70px, rgba(230,213,167,.09) 71px, transparent 72px 142px);
+      mask-image: linear-gradient(to bottom, black, transparent 78%);
+      animation: pattern-drift 42s linear infinite alternate;
+    }
+
+    .page {
+      width: min(100% - 38px, 720px);
+      margin: 0 auto;
+      padding: 47px 0 34px;
+      text-align: center;
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 14px;
+      color: var(--gold-soft);
+      font-size: .68rem;
+      font-weight: 500;
+      letter-spacing: .36em;
+      text-transform: uppercase;
+      opacity: 0;
+      animation: appear 1.5s .2s ease forwards;
+    }
+
+    .brand::before, .brand::after {
+      content: "";
+      width: 27px;
+      height: 1px;
+      background: var(--gold);
+      transform: scaleX(0);
+      animation: draw-line 2s .7s cubic-bezier(.22,.61,.36,1) forwards;
+    }
+
+    h1 {
+      margin: 27px 0 0;
+      color: var(--ivory);
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(3.05rem, 7.4vw, 5rem);
+      font-weight: 600;
+      letter-spacing: -.025em;
+      line-height: .91;
+      text-wrap: balance;
+      text-shadow: 0 5px 24px rgba(0,0,0,.12);
+      opacity: 0;
+      animation: title-reveal 2.1s .3s cubic-bezier(.2,.7,.2,1) forwards;
+    }
+
+    .subtitle {
+      margin: 12px 0 23px;
+      color: var(--gold-soft);
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(1.55rem, 3.9vw, 2rem);
+      font-style: italic;
+      font-weight: 500;
+      letter-spacing: .015em;
+      opacity: 0;
+      animation: appear 1.8s .85s ease forwards;
+    }
+
+    .intro {
+      max-width: 490px;
+      margin: 0 auto 25px;
+      color: var(--mist);
+      font-size: .9rem;
+      line-height: 1.9;
+      font-weight: 400;
+      opacity: 0;
+      animation: rise 1.9s 1s cubic-bezier(.2,.7,.2,1) forwards;
+    }
+
+    .book-stage {
+      position: relative;
+      display: inline-block;
+      isolation: isolate;
+      margin: 0 auto 19px;
+      padding: 10px 18px 17px;
+      opacity: 0;
+      animation: book-arrive 2.1s 1.05s cubic-bezier(.2,.7,.2,1) forwards;
+    }
+
+    /* L'ombre lumineuse se déplace lentement derrière le livre. */
+    .book-stage::before {
+      content: "";
+      position: absolute;
+      z-index: -1;
+      width: 76%;
+      height: 70%;
+      left: 12%;
+      top: 16%;
+      border-radius: 50%;
+      background: rgba(205,174,104,.28);
+      filter: blur(49px);
+      opacity: .58;
+      transform: translate3d(-12px, 9px, 0) scale(.88);
+      animation: shadow-drift 13s ease-in-out infinite alternate;
+    }
+
+    .book-stage::after {
+      content: "";
+      position: absolute;
+      z-index: -1;
+      left: 17%;
+      right: 17%;
+      bottom: 8px;
+      height: 24px;
+      border-radius: 50%;
+      background: rgba(0,0,0,.48);
+      filter: blur(22px);
+      transform: scale(.86);
+      animation: floor-shadow 9s ease-in-out infinite alternate;
+    }
+
+    .cover-link {
+      display: block;
+      line-height: 0;
+      perspective: 1400px;
+    }
+
+    .cover {
+      display: block;
+      width: min(310px, 70vw);
+      height: auto;
+      border: 1px solid rgba(226,206,156,.56);
+      box-shadow:
+        0 22px 54px rgba(0,0,0,.32),
+        0 0 0 1px rgba(255,255,255,.035);
+      transform-origin: 50% 58%;
+      animation: book-breathe 12s 2.8s ease-in-out infinite;
+      transition: box-shadow 1s ease, filter 1s ease;
+    }
+
+    .cover-link:hover .cover {
+      box-shadow:
+        0 28px 66px rgba(0,0,0,.4),
+        0 0 35px rgba(212,182,111,.13),
+        0 0 0 1px rgba(255,255,255,.05);
+      filter: brightness(1.025);
+    }
+
+    .meta {
+      margin: 0 0 21px;
+      color: rgba(243,239,223,.63);
+      font-size: .67rem;
+      letter-spacing: .19em;
+      text-transform: uppercase;
+      opacity: 0;
+      animation: appear 1.5s 1.8s ease forwards;
+    }
+
+    .buy {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 15px;
+      min-width: 238px;
+      padding: 16px 27px;
+      overflow: hidden;
+      border: 1px solid var(--gold-soft);
+      border-radius: 1px;
+      color: #183328;
+      background: var(--gold-soft);
+      text-decoration: none;
+      font-size: .73rem;
+      font-weight: 600;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      opacity: 0;
+      animation: rise 1.7s 1.95s ease forwards, button-breathe 8s 4s ease-in-out infinite;
+      transition: color .65s ease, background .65s ease, border-color .65s ease, transform .65s ease;
+    }
+
+    .buy::before {
+      content: "";
+      position: absolute;
+      top: -50%;
+      left: -85%;
+      width: 42%;
+      height: 200%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,.42), transparent);
+      transform: skewX(-20deg);
+      transition: left 1.25s cubic-bezier(.22,.61,.36,1);
+    }
+
+    .buy::after {
+      content: "↗";
+      font-size: 1rem;
+      font-weight: 400;
+      transition: transform .65s ease;
+    }
+
+    .buy:hover {
+      color: var(--gold-soft);
+      background: transparent;
+      border-color: var(--gold);
+      transform: translateY(-2px);
+    }
+
+    .buy:hover::before { left: 145%; }
+    .buy:hover::after { transform: translate(3px,-3px); }
+
+    .price {
+      margin: 13px 0 0;
+      color: var(--gold-soft);
+      font-size: .82rem;
+      letter-spacing: .035em;
+      opacity: 0;
+      animation: appear 1.5s 2.15s ease forwards;
+    }
+
+    .divider {
+      width: 50px;
+      height: 1px;
+      margin: 39px auto 29px;
+      background: var(--gold);
+      transform: scaleX(0);
+      animation: draw-line 2.2s 2.25s cubic-bezier(.22,.61,.36,1) forwards;
+    }
+
+    .description {
+      max-width: 540px;
+      margin: 0 auto;
+      opacity: 0;
+      animation: rise 1.8s 2.35s ease forwards;
+    }
+
+    h2 {
+      margin: 0 0 11px;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2rem, 4.8vw, 2.55rem);
+      font-weight: 500;
+      line-height: 1.05;
+    }
+
+    .description p {
+      margin: 0;
+      color: var(--mist);
+      font-size: .85rem;
+      line-height: 1.9;
+    }
+
+    .topics {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      align-items: stretch;
+      max-width: 550px;
+      margin: 23px auto 0;
+      border-top: 1px solid var(--hairline);
+      border-bottom: 1px solid var(--hairline);
+      opacity: 0;
+      animation: appear 1.8s 2.6s ease forwards;
+    }
+
+    .topics span {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 43px;
+      padding: 8px 6px;
+      color: var(--gold-soft);
+      font-size: .66rem;
+      line-height: 1.3;
+      letter-spacing: .025em;
+      white-space: nowrap;
+    }
+
+    .topics span + span { border-left: 1px solid var(--hairline); }
+
+    .topics span {
+      opacity: 0;
+      animation: topic-appear 1.6s ease forwards;
+    }
+    .topics span:nth-child(1) { animation-delay: 2.8s; }
+    .topics span:nth-child(2) { animation-delay: 3.05s; }
+    .topics span:nth-child(3) { animation-delay: 3.3s; }
+    .topics span:nth-child(4) { animation-delay: 3.55s; }
+
+    footer {
+      margin-top: 36px;
+      color: rgba(243,239,223,.43);
+      font-size: .61rem;
+      letter-spacing: .22em;
+      text-transform: uppercase;
+      opacity: 0;
+      animation: appear 1.8s 3.5s ease forwards;
+    }
+
+    @keyframes appear {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    @keyframes rise {
+      from { opacity: 0; transform: translateY(16px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes title-reveal {
+      0% { opacity: 0; transform: translateY(24px); filter: blur(5px); letter-spacing: .015em; }
+      100% { opacity: 1; transform: translateY(0); filter: blur(0); letter-spacing: -.025em; }
+    }
+
+    @keyframes book-arrive {
+      0% { opacity: 0; transform: translateY(25px) scale(.975); filter: blur(4px); }
+      100% { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
+    }
+
+    @keyframes book-breathe {
+      0%, 100% { transform: translateY(0) rotateX(0deg) rotateY(0deg); }
+      50% { transform: translateY(-4px) rotateX(.35deg) rotateY(-.25deg); }
+    }
+
+    @keyframes shadow-drift {
+      0% { transform: translate3d(-18px, 9px, 0) scale(.84); opacity: .42; }
+      50% { transform: translate3d(15px, -5px, 0) scale(1.02); opacity: .7; }
+      100% { transform: translate3d(-5px, 12px, 0) scale(.91); opacity: .52; }
+    }
+
+    @keyframes floor-shadow {
+      from { transform: translateX(-8px) scale(.82); opacity: .58; }
+      to { transform: translateX(8px) scale(1); opacity: .78; }
+    }
+
+    @keyframes button-breathe {
+      0%, 100% { box-shadow: 0 0 0 rgba(226,206,156,0); }
+      50% { box-shadow: 0 0 24px rgba(226,206,156,.10); }
+    }
+
+    @keyframes draw-line {
+      from { transform: scaleX(0); }
+      to { transform: scaleX(1); }
+    }
+
+    @keyframes topic-appear {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes pattern-drift {
+      from { transform: translate3d(0,0,0); }
+      to { transform: translate3d(0,-24px,0); }
+    }
+
+    @media (max-width: 560px) {
+      .page { width: min(100% - 30px, 720px); padding-top: 35px; }
+      .intro { max-width: 390px; font-size: .84rem; }
+      .cover { width: min(275px, 70vw); }
+      .topics { grid-template-columns: repeat(2, minmax(0,1fr)); }
+      .topics span { min-height: 40px; white-space: normal; }
+      .topics span:nth-child(3) { border-left: 0; border-top: 1px solid var(--hairline); }
+      .topics span:nth-child(4) { border-top: 1px solid var(--hairline); }
+      footer { margin-top: 30px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: .01ms !important;
+        animation-delay: 0ms !important;
+        transition-duration: .01ms !important;
+        scroll-behavior: auto !important;
+      }
+      .brand, h1, .subtitle, .intro, .book-stage, .meta, .buy, .price,
+      .description, .topics, .topics span, footer {
+        opacity: 1;
+        transform: none;
+        filter: none;
+      }
+      .brand::before, .brand::after, .divider { transform: scaleX(1); }
+    }
   </style>
 </head>
 <body>
-  <div class="conteneur">
+  <div class="atmosphere" aria-hidden="true"></div>
+
+  <main class="page">
+    <div class="brand">DÉDALE</div>
+
     <h1>Le Manuel de la Lucidité</h1>
-    <p class="sous-titre">Apprendre à penser par soi-même</p>
-    <a href="https://buy.stripe.com/00wbJ2be2gHW71C3Xe3oA02" target="_blank" rel="noopener">
-      <img src="assets/couverture.jpg" alt="Couverture" class="couverture">
+    <p class="subtitle">Apprendre à penser par soi-même</p>
+
+    <p class="intro">
+      Un guide pratique pour comprendre les mécanismes de la pensée,
+      reconnaître les biais cognitifs et développer son autonomie intellectuelle.
+    </p>
+
+    <div class="book-stage">
+      <a class="cover-link" href="https://buy.stripe.com/00wbJ2be2gHW71C3Xe3oA02" target="_blank" rel="noopener" aria-label="Acheter Le Manuel de la Lucidité">
+        <img class="cover" src="assets/couverture.jpg" alt="Couverture du Manuel de la Lucidité">
+      </a>
+    </div>
+
+    <p class="meta">69 pages&nbsp;&nbsp; · &nbsp;&nbsp; Format PDF</p>
+
+    <a class="buy" href="https://buy.stripe.com/00wbJ2be2gHW71C3Xe3oA02" target="_blank" rel="noopener">
+      Obtenir le manuel
     </a>
-    <p>Un guide pratique pour comprendre les mécanismes de la pensée, reconnaître les biais cognitifs, déjouer les raisonnements trompeurs et développer son autonomie intellectuelle.</p>
-    <a href="https://buy.stripe.com/00wbJ2be2gHW71C3Xe3oA02" class="bouton" target="_blank" rel="noopener">Obtenir le manuel ici</a>
-    <p class="prix">9,90 € · Format PDF · Téléchargement immédiat</p>
-  </div>
+    <p class="price">9,90 € · Paiement sécurisé</p>
+
+    <div class="divider"></div>
+
+    <section class="description">
+      <h2>Penser avec plus de justesse.</h2>
+      <p>
+        Des biais cognitifs aux sophismes, des exercices aux outils d'analyse :
+        une introduction structurée à l'art de questionner une idée,
+        d'évaluer un argument et de former son propre jugement.
+      </p>
+
+      <div class="topics" aria-label="Contenu du manuel">
+        <span>12 biais cognitifs</span>
+        <span>12 sophismes</span>
+        <span>Exercices corrigés</span>
+        <span>Fiches pratiques</span>
+      </div>
+    </section>
+
+    <footer>Collection Exploration intellectuelle</footer>
+  </main>
 </body>
 </html>
+
