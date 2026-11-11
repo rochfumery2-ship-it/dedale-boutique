@@ -1,0 +1,8 @@
+{
+  "name": "dedale-boutique",
+  "version": "1.0.0",
+  "dependencies": {
+    "@netlify/blobs": "^8.0.0",
+    "stripe": "^17.0.0"
+  }
+}
