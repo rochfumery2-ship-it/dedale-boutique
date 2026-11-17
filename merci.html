@@ -324,14 +324,18 @@
   </main>
 
   <script>
-    // La session Stripe est conservée et transmise à l'endpoint sécurisé.
+    // ⚠️ SEULE LIGNE À ADAPTER : mettez ici le chemin exact de votre PDF.
+    // Le fichier doit se trouver dans le dossier "assets" à la racine du site.
+    const cheminPDF = "/assets/manuel-de-la-lucidite.pdf";
+
     const params = new URLSearchParams(window.location.search);
     const sessionId = params.get('session_id');
     const bouton = document.getElementById('bouton-telechargement');
     const messageErreur = document.getElementById('message-erreur');
 
     if (sessionId) {
-      bouton.href = `/api/download?session_id=${encodeURIComponent(sessionId)}`;
+      bouton.href = cheminPDF;
+      bouton.setAttribute('download', ''); // force le téléchargement au clic
     } else {
       bouton.style.display = 'none';
       messageErreur.style.display = 'block';
